@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  cmwrk_elastic:
+    
+    container_name: cmwrk_elastic
+    environment:
+      - node.name=elasticsearch
+      - http.port=9200
+      - discovery.type=single-node
+      - cluster.name=elasticsearch
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    restart: always
+    networks:
+      - cmwrk
+  prodit_se:
+    image: rg.fr-par.scw.cloud/prodit/prodit_se:${UPRODIT_VERSION}
+    container_name: prodit-se
+    restart: always
+    networks:
+      - cmwrk
+    ports:
+      - 8071:80
+
+networks:
+  prodit:
+    driver: bridge
