@@ -13,6 +13,6 @@ Formation d'introduction donnée en 2016 et en 2022 sur les microservices Elasti
 * [Benchmark Node.JS vs vert.x](benchmark)
 * [Exemple de composant d'intégration pour Elasticsearch avec vert.x et CDI](elasticsearch-example)
 
-### Présentations
+### Slides de la formation
 
-* [Présentation donnée en 2016](./slides/presentation_18_02_2016.pdf)
+* [Slides](./slides-microservices-vertx-elasticsearch.pdf)
