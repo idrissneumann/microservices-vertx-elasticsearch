@@ -1,7 +1,6 @@
 package com.bblvertx.route;
 
-import com.bblvertx.utils.singleton.impl.RouteContext;
-
+import com.bblvertx.utils.singleton.IRouteContext;
 import io.vertx.ext.web.Router;
 
 /**
@@ -21,7 +20,7 @@ public abstract class AbstractIndexingRoute extends AbstractAsyncRoute {
    * @param router
    * @param ctx
    */
-  public AbstractIndexingRoute(String url, String contentType, Router router, RouteContext ctx) {
+  public AbstractIndexingRoute(String url, String contentType, Router router, IRouteContext ctx) {
     super(url, contentType, router, ctx);
   }
 }

@@ -3,7 +3,7 @@ package com.bblvertx.indexation.adapter;
 import java.io.Serializable;
 
 import com.bblvertx.persistence.RowMapper;
-import com.bblvertx.utils.singleton.impl.RouteContext;
+import com.bblvertx.utils.singleton.IRouteContext;
 
 /**
  * Indexing abstract adapter.
@@ -14,7 +14,7 @@ import com.bblvertx.utils.singleton.impl.RouteContext;
  */
 public abstract class AbstractIndexingAdapter<T extends Serializable>
     implements IndexingAdapter<T> {
-  protected RouteContext ctx;
+  protected IRouteContext ctx;
 
   protected RowMapper<T> rowMapper;
 
@@ -23,7 +23,7 @@ public abstract class AbstractIndexingAdapter<T extends Serializable>
    * 
    * @param ctx
    */
-  public AbstractIndexingAdapter(RouteContext ctx) {
+  public AbstractIndexingAdapter(IRouteContext ctx) {
     this.ctx = ctx;
   }
 
@@ -31,7 +31,7 @@ public abstract class AbstractIndexingAdapter<T extends Serializable>
    * {@inheritDoc}
    */
   @Override
-  public RouteContext getRouteContext() {
+  public IRouteContext getRouteContext() {
     return ctx;
   }
 

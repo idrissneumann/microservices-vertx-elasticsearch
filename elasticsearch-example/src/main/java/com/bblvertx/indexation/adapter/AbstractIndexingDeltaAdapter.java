@@ -1,7 +1,7 @@
 package com.bblvertx.indexation.adapter;
 
 import com.bblvertx.persistence.RowMapper;
-import com.bblvertx.utils.singleton.impl.RouteContext;
+import com.bblvertx.utils.singleton.IRouteContext;
 
 import java.io.Serializable;
 
@@ -22,7 +22,7 @@ public abstract class AbstractIndexingDeltaAdapter<T extends Serializable>
    * 
    * @param ctx
    */
-  public AbstractIndexingDeltaAdapter(RouteContext ctx) {
+  public AbstractIndexingDeltaAdapter(IRouteContext ctx) {
     super(ctx);
   }
 

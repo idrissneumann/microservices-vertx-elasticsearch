@@ -1,6 +1,6 @@
 package com.bblvertx.persistence.mapper;
 
-import static com.bblvertx.utils.singleton.impl.CassandraDataSource.getIntFromRS;
+import static com.bblvertx.utils.singleton.impl.CassandraDataSourceImpl.getIntFromRS;
 
 import com.bblvertx.persistence.RowMapper;
 import com.datastax.driver.core.Row;

@@ -1,9 +1,9 @@
 package com.bblvertx.persistence.mapper;
 
 import static com.bblvertx.utils.JSONUtils.ERROR_PARSING_MSG;
-import static com.bblvertx.utils.singleton.impl.CassandraDataSource.getIntFromRS;
-import static com.bblvertx.utils.singleton.impl.CassandraDataSource.getStringFromRS;
-import static com.bblvertx.utils.singleton.impl.CassandraDataSource.getUuidFromRS;
+import static com.bblvertx.utils.singleton.impl.CassandraDataSourceImpl.getIntFromRS;
+import static com.bblvertx.utils.singleton.impl.CassandraDataSourceImpl.getStringFromRS;
+import static com.bblvertx.utils.singleton.impl.CassandraDataSourceImpl.getUuidFromRS;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import com.bblvertx.persistence.RowMapper;

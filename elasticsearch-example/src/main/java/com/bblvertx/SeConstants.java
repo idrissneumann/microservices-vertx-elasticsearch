@@ -63,6 +63,10 @@ public interface SeConstants {
   String ES_KEY_HOST = "es.host";
   String ES_KEY_PORT = "es.port";
   String ES_KEY_CLUSTER = "es.cluster";
+  String ES_KEY_SCHEME = "es.scheme";
+  String ES_KEY_PATH = "es.path";
+  String ES_KEY_USERNAME = "es.username";
+  String ES_KEY_PASSWORD = "es.password";
 
   /**
    * Indexes

@@ -2,10 +2,9 @@ package com.bblvertx.route;
 
 import static com.bblvertx.SeConstants.PREFIX_URL;
 
+import com.bblvertx.utils.singleton.IRouteContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
 import io.vertx.ext.web.Router;
 
@@ -18,7 +17,7 @@ import io.vertx.ext.web.Router;
 public abstract class AbstractAsyncRoute implements AsyncRoute {
   private static final Logger LOGGER = LogManager.getLogger(AbstractAsyncRoute.class);
 
-  protected RouteContext ctx;
+  protected IRouteContext ctx;
 
   /**
    * Init the async route in the router of verticle.
@@ -27,7 +26,7 @@ public abstract class AbstractAsyncRoute implements AsyncRoute {
    * @param contentType
    * @param router
    */
-  public AbstractAsyncRoute(String url, String contentType, Router router, RouteContext ctx) {
+  public AbstractAsyncRoute(String url, String contentType, Router router, IRouteContext ctx) {
     this.ctx = ctx;
     router.get(String.format(PREFIX_URL, url)).handler(req -> {
       LOGGER.info("Lauching route " + url);

@@ -19,9 +19,6 @@ import com.bblvertx.route.impl.JdbcIndexingSingleUserRoute;
 import com.bblvertx.tests.AbstractTest;
 import com.bblvertx.utils.JSONUtils;
 import com.bblvertx.utils.singleton.impl.ESClient;
-import com.bblvertx.utils.singleton.impl.JdbcDataSource;
-import com.bblvertx.utils.singleton.impl.PropertyReader;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
 import org.elasticsearch.action.ListenableActionFuture;
 import org.elasticsearch.action.index.IndexRequestBuilder;

@@ -3,8 +3,8 @@ package com.bblvertx.route.impl;
 import static com.bblvertx.SeConstants.ES_INDEX_USER;
 
 import com.bblvertx.route.AbstractSearchSingleFieldRoute;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
+import com.bblvertx.utils.singleton.IRouteContext;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -20,7 +20,7 @@ public class AutocompleteSkillRoute extends AbstractSearchSingleFieldRoute {
    * @param router
    * @param ctx
    */
-  public AutocompleteSkillRoute(String url, String contentType, Router router, RouteContext ctx) {
+  public AutocompleteSkillRoute(String url, String contentType, Router router, IRouteContext ctx) {
     super(url, contentType, router, ctx);
   }
 

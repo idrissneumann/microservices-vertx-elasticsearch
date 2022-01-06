@@ -2,8 +2,7 @@ package com.bblvertx.route;
 
 import static com.bblvertx.SeConstants.PREFIX_URL;
 
-import com.bblvertx.utils.singleton.impl.RouteContext;
-
+import com.bblvertx.utils.singleton.IRouteContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +17,7 @@ import io.vertx.ext.web.Router;
 public abstract class AbstractRoute implements Route {
   private static final Logger LOGGER = LogManager.getLogger(AbstractRoute.class);
 
-  protected RouteContext ctx;
+  protected IRouteContext ctx;
 
   /**
    * Initializing route in the router of verticle.
@@ -27,7 +26,7 @@ public abstract class AbstractRoute implements Route {
    * @param contentType
    * @param router
    */
-  public AbstractRoute(String url, String contentType, Router router, RouteContext ctx) {
+  public AbstractRoute(String url, String contentType, Router router, IRouteContext ctx) {
     this.ctx = ctx;
     router.get(String.format(PREFIX_URL, url)).handler(req -> {
       LOGGER.info("Lauching route " + url);

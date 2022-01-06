@@ -1,6 +1,6 @@
 package com.bblvertx.persistence.mapper;
 
-import static com.bblvertx.utils.singleton.impl.JdbcDataSource.getIntFromRS;
+import static com.bblvertx.utils.singleton.impl.JdbcDataSourceImpl.getIntFromRS;
 
 import com.bblvertx.exception.TechnicalException;
 import com.bblvertx.persistence.RowMapper;

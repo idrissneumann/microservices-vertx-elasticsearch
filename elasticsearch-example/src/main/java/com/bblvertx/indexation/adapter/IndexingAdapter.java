@@ -1,8 +1,8 @@
 package com.bblvertx.indexation.adapter;
 
 import com.bblvertx.persistence.RowMapper;
+import com.bblvertx.utils.singleton.IRouteContext;
 import com.bblvertx.utils.singleton.SeDataSource;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
 import java.io.Serializable;
 
@@ -19,7 +19,7 @@ public interface IndexingAdapter<T extends Serializable> {
    * 
    * @return RouteContext
    */
-  RouteContext getRouteContext();
+  IRouteContext getRouteContext();
 
   /**
    * Getting "update rs search" SQL/CQL query.

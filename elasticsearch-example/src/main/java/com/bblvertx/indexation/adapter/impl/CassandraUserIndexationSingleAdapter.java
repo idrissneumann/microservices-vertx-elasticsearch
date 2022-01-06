@@ -9,8 +9,8 @@ import com.bblvertx.exception.TechnicalException;
 import com.bblvertx.indexation.adapter.AbstractIndexingAdapter;
 import com.bblvertx.persistence.mapper.CassandraUserMapper;
 import com.bblvertx.pojo.vo.UserVO;
+import com.bblvertx.utils.singleton.IRouteContext;
 import com.bblvertx.utils.singleton.SeDataSource;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
 import java.io.IOException;
 
@@ -26,7 +26,7 @@ public class CassandraUserIndexationSingleAdapter extends AbstractIndexingAdapte
    * 
    * @param ctx
    */
-  public CassandraUserIndexationSingleAdapter(RouteContext ctx) {
+  public CassandraUserIndexationSingleAdapter(IRouteContext ctx) {
     super(ctx);
     rowMapper = new CassandraUserMapper();
   }

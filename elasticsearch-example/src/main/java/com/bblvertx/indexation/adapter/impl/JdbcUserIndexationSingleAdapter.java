@@ -9,8 +9,8 @@ import com.bblvertx.exception.TechnicalException;
 import com.bblvertx.indexation.adapter.AbstractIndexingAdapter;
 import com.bblvertx.persistence.mapper.JdbcUserMapper;
 import com.bblvertx.pojo.vo.UserVO;
+import com.bblvertx.utils.singleton.IRouteContext;
 import com.bblvertx.utils.singleton.SeDataSource;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
 import java.io.IOException;
 
@@ -26,7 +26,7 @@ public class JdbcUserIndexationSingleAdapter extends AbstractIndexingAdapter<Use
    * 
    * @param ctx
    */
-  public JdbcUserIndexationSingleAdapter(RouteContext ctx) {
+  public JdbcUserIndexationSingleAdapter(IRouteContext ctx) {
     super(ctx);
     rowMapper = new JdbcUserMapper();
   }

@@ -10,7 +10,6 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import com.bblvertx.SearchEngineServer;
 import com.bblvertx.tests.AbstractTest;
 import com.bblvertx.utils.FileUtils;
-import com.bblvertx.utils.singleton.impl.PropertyReader;
 
 import org.junit.After;
 import org.junit.Before;

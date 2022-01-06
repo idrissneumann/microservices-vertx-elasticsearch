@@ -2,8 +2,7 @@ package com.bblvertx.route;
 
 import static org.elasticsearch.index.query.QueryBuilders.regexpQuery;
 
-import com.bblvertx.utils.singleton.impl.RouteContext;
-
+import com.bblvertx.utils.singleton.IRouteContext;
 import org.elasticsearch.index.query.QueryBuilder;
 
 import io.vertx.ext.web.Router;
@@ -27,7 +26,7 @@ public abstract class AbstractSearchIndexRoute extends AbstractRoute {
    * @param router
    * @param ctx
    */
-  public AbstractSearchIndexRoute(String url, String contentType, Router router, RouteContext ctx) {
+  public AbstractSearchIndexRoute(String url, String contentType, Router router, IRouteContext ctx) {
     super(url, contentType, router, ctx);
   }
 

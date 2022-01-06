@@ -1,8 +1,8 @@
 package com.bblvertx.persistence.mapper;
 
-import static com.bblvertx.utils.singleton.impl.JdbcDataSource.getDateFromRS;
-import static com.bblvertx.utils.singleton.impl.JdbcDataSource.getIntFromRS;
-import static com.bblvertx.utils.singleton.impl.JdbcDataSource.getStringFromRS;
+import static com.bblvertx.utils.singleton.impl.JdbcDataSourceImpl.getDateFromRS;
+import static com.bblvertx.utils.singleton.impl.JdbcDataSourceImpl.getIntFromRS;
+import static com.bblvertx.utils.singleton.impl.JdbcDataSourceImpl.getStringFromRS;
 
 import com.bblvertx.exception.TechnicalException;
 import com.bblvertx.persistence.RowMapper;

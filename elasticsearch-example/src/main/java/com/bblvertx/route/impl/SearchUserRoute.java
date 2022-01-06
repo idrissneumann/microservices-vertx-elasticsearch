@@ -20,13 +20,15 @@ import com.bblvertx.exception.TechnicalException;
 import com.bblvertx.pojo.SearchResult;
 import com.bblvertx.pojo.vo.UserVO;
 import com.bblvertx.route.AbstractSearchIndexRoute;
-import com.bblvertx.utils.singleton.impl.RouteContext;
+import com.bblvertx.utils.singleton.IRouteContext;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 
@@ -38,6 +40,8 @@ import java.util.List;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 
 /**
  * Route to search user by criterias.
@@ -56,7 +60,7 @@ public class SearchUserRoute extends AbstractSearchIndexRoute {
    * @param router
    * @param ctx
    */
-  public SearchUserRoute(String url, String contentType, Router router, RouteContext ctx) {
+  public SearchUserRoute(String url, String contentType, Router router, IRouteContext ctx) {
     super(url, contentType, router, ctx);
   }
 
@@ -84,7 +88,7 @@ public class SearchUserRoute extends AbstractSearchIndexRoute {
         String.format(MSG_BAD_REQUEST_MUST_BE_CALENDAR, "dateConnect"));
 
     BoolQueryBuilder qb = boolQuery();
-    qb.minimumNumberShouldMatch(1);
+    qb.minimumShouldMatch(1);
 
     if (isNotEmpty(nom)) {
       qb.must(match("name", nom));
@@ -123,21 +127,15 @@ public class SearchUserRoute extends AbstractSearchIndexRoute {
     SearchResult<UserVO> result =
         initSearchResult(Long.valueOf(startIndex), Long.valueOf(maxResults));
     try {
-      r = ctx.getEsClient() //
-          .getClient() //
-          .prepareSearch(ES_INDEX_USER) //
-          .setQuery(qb) //
-          .setFrom(startIndex * maxResults) //
-          .setSize(maxResults).execute() //
-          .actionGet();
+      r = ctx.getEsClient().getClient().search(new SearchRequest(ES_INDEX_USER).source(new SearchSourceBuilder().query(qb).from(startIndex * maxResults).size(maxResults)), RequestOptions.DEFAULT);
     } catch (Exception e) {
       LOGGER.warn(e);
       return objectTojsonQuietly(result, SearchResult.class);
     }
 
-    result.setTotalResults(r.getHits().getTotalHits());
+    result.setTotalResults(r.getHits().getTotalHits().value);
 
-    List<UserVO> lstResult = new ArrayList<UserVO>();
+    List<UserVO> lstResult = new ArrayList<>();
 
     // Unmarshalling
     ObjectMapper mapper = new ObjectMapper();

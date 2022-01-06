@@ -11,20 +11,25 @@ import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.regexpQuery;
 
 import com.bblvertx.pojo.SearchResult;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
+import com.bblvertx.utils.singleton.IRouteContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 /**
  * Abstract searching single field route.
@@ -46,8 +51,12 @@ public abstract class AbstractSearchSingleFieldRoute extends AbstractSearchIndex
   public AbstractSearchSingleFieldRoute(String url,
       String contentType,
       Router router,
-      RouteContext ctx) {
+      IRouteContext ctx) {
     super(url, contentType, router, ctx);
+  }
+
+  public String proceed(HttpServerRequest request, HttpServerResponse response, String indexName, String fieldsName) {
+    return proceed(request, response, indexName, Arrays.asList(fieldsName));
   }
 
   /**
@@ -56,11 +65,10 @@ public abstract class AbstractSearchSingleFieldRoute extends AbstractSearchIndex
    * @param request
    * @param response
    * @param indexName
-   * @param fieldName
+   * @param fieldsNames
    * @return String : réponse sérialisée en JSON
    */
-  public String proceed(HttpServerRequest request, HttpServerResponse response, String indexName,
-      String fieldName) {
+  private String proceed(HttpServerRequest request, HttpServerResponse response, String indexName, List<String> fieldsNames) {
 
     // Checking parameters
     Integer startIndex = assertParamNumeric(request.getParam("startIndex"),
@@ -74,7 +82,7 @@ public abstract class AbstractSearchSingleFieldRoute extends AbstractSearchIndex
     List<String> searchCriteres = request.params().getAll("term");
 
     BoolQueryBuilder qb = boolQuery();
-    qb.minimumNumberShouldMatch(1);
+    qb.minimumShouldMatch(1);
 
     SearchResult<String> result =
         initSearchResult(Long.valueOf(startIndex), Long.valueOf(maxResults));
@@ -83,53 +91,68 @@ public abstract class AbstractSearchSingleFieldRoute extends AbstractSearchIndex
     }
 
     for (String c : searchCriteres) {
-      qb.should(regexpQuery(fieldName, c.toLowerCase() + ".*"));
+      for (String fieldName : fieldsNames) {
+        qb.should(regexpQuery(fieldName, c.toLowerCase() + ".*"));
+      }
     }
 
     SearchResponse r = null;
     try {
-      r = ctx.getEsClient() //
-          .getClient() //
-          .prepareSearch(indexName) //
-          .setQuery(qb) //
-          .addFields(fieldName) //
-          .setFrom(startIndex * maxResults) //
-          .setSize(maxResults).execute() //
-          .actionGet();
+      r = ctx.getEsClient().getClient().search(new SearchRequest(indexName).source(new SearchSourceBuilder().query(qb).fetchSource(fieldsNames.toArray(new String[fieldsNames.size()]), null).from(startIndex * maxResults).size(maxResults)), RequestOptions.DEFAULT);
     } catch (Exception e) {
       LOGGER.warn(e);
       return objectTojsonQuietly(result, SearchResult.class);
     }
 
-    result.setTotalResults(r.getHits().getTotalHits());
+    result.setTotalResults(r.getHits().getTotalHits().value);
 
-    List<String> lstResult = new ArrayList<String>();
+    List<String> lstResult = new ArrayList<>();
 
     if (r.getHits().getHits().length > 0) {
-      for (SearchHit hit : r.getHits().getHits()) {
-        List<Object> values = hit.getFields().get(fieldName).getValues();
-        if (isEmpty(values)) {
-          continue;
-        }
-
-        for (Object v : values) {
-          if (null == v) {
-            continue;
-          }
-
-          String value = String.valueOf(v).toLowerCase();
-          for (String c : searchCriteres) {
-            if (value.contains(c.toLowerCase()) && !lstResult.contains(value)) {
-              lstResult.add(value);
-              break;
-            }
-          }
-        }
-      }
+      Arrays.stream(r.getHits().getHits())
+              .forEach(hit -> processHit(fieldsNames, searchCriteres, lstResult, hit));
     }
 
     result.setResults(lstResult);
 
     return objectTojsonQuietly(result, SearchResult.class);
+  }
+
+  /**
+   * Processing of hits.
+   *
+   * @param fieldsNames
+   * @param searchCriteres
+   * @param lstResult
+   * @param hit
+   */
+  private void processHit(List<String> fieldsNames,
+                          List<String> searchCriteres,
+                          List<String> lstResult,
+                          SearchHit hit) {
+    List<Object> values =
+            fieldsNames.stream().map(n -> hit.getSourceAsMap().get(n)).collect(Collectors.toList());
+
+    if (isEmpty(values)) {
+      return;
+    }
+
+    for (Object v : values) {
+      if (null == v) {
+        continue;
+      }
+
+      String value = String.valueOf(v).toLowerCase();
+      if (value.length() >= 3) {
+        value = value.substring(1, value.length() - 1);
+      }
+
+      for (String c : searchCriteres) {
+        if (value.contains(c.toLowerCase()) && !lstResult.contains(value)) {
+          lstResult.add(value);
+          break;
+        }
+      }
+    }
   }
 }

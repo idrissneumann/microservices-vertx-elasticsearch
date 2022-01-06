@@ -8,9 +8,12 @@ import static com.bblvertx.SeConstants.KEY_TPL_ROUTE_CONTENT_TYPE;
 import static com.bblvertx.SeConstants.KEY_TPL_ROUTE_URL;
 import static com.bblvertx.SeConstants.ROUTE_CONFIG_FILE;
 
-import com.bblvertx.utils.singleton.impl.PropertyReader;
-import com.bblvertx.utils.singleton.impl.RouteContext;
+import com.bblvertx.ioc.SeBinder;
+import com.bblvertx.utils.singleton.IPropertyReader;
 
+import com.bblvertx.utils.singleton.IRouteContext;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,11 +33,13 @@ import io.vertx.ext.web.Router;
 public class SearchEngineServer extends AbstractVerticle {
   private static final Logger LOGGER = LogManager.getLogger(SearchEngineServer.class);
 
-  @Inject
-  private PropertyReader reader;
+  private SeBinder seBinder;
 
   @Inject
-  private RouteContext routeCtx;
+  private IPropertyReader reader;
+
+  @Inject
+  private IRouteContext routeCtx;
 
   /**
    * {@inheritDoc}
@@ -42,6 +47,11 @@ public class SearchEngineServer extends AbstractVerticle {
   @Override
   public void start() throws Exception {
     LOGGER.info("Launching server...");
+    System.setProperty("es.set.netty.runtime.available.processors", "false");
+
+    seBinder = new SeBinder(vertx);
+    Injector injector = Guice.createInjector(seBinder);
+    injector.injectMembers(this);
 
     Integer port = reader.getInt(APP_CONFIG_FILE, KEY_PORT);
 
@@ -58,7 +68,7 @@ public class SearchEngineServer extends AbstractVerticle {
 
         Class<?> clazz = Class.forName(String.format(CLASS_ROUTE_PATTERN, routeClass));
         Constructor<?> ctor =
-            clazz.getConstructor(String.class, String.class, Router.class, RouteContext.class);
+            clazz.getConstructor(String.class, String.class, Router.class, IRouteContext.class);
         ctor.newInstance(new Object[] {routeUrl, routeContentType, router, routeCtx});
         i++;
       } catch (Exception e) {
@@ -66,6 +76,6 @@ public class SearchEngineServer extends AbstractVerticle {
       }
     }
 
-    vertx.createHttpServer().requestHandler(router::accept).listen(port);
+    vertx.createHttpServer().requestHandler(router::handle).listen(port);
   }
 }

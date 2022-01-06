@@ -15,8 +15,8 @@ import com.bblvertx.persistence.QueryParam;
 import com.bblvertx.persistence.QueryParamBuilder;
 import com.bblvertx.persistence.RowMapper;
 import com.bblvertx.utils.JSONUtils;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
+import com.bblvertx.utils.singleton.IRouteContext;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -27,6 +27,9 @@ import java.util.UUID;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.xcontent.XContentType;
 
 /**
  * Generic impl of single mode indexing route.
@@ -54,7 +57,7 @@ public abstract class AbstractIndexingSingleRoute<T extends Serializable>
   public AbstractIndexingSingleRoute(String url,
       String contentType,
       Router router,
-      RouteContext ctx) {
+      IRouteContext ctx) {
     super(url, contentType, router, ctx);
   }
 
@@ -109,13 +112,7 @@ public abstract class AbstractIndexingSingleRoute<T extends Serializable>
 
         if (isNotEmpty(lstResults)) {
           for (T elem : lstResults) {
-            ctx.getEsClient() //
-                .getClient() //
-                .prepareIndex(adapter.getIndexName(), adapter.getIndexType(), adapter.getId(elem)) //
-                .setSource(objectTojsonQuietly(elem, adapter.getValueObjectClass())) //
-                .execute() //
-                .actionGet();
-
+            ctx.getEsClient().getClient().index(new IndexRequest(adapter.getIndexName()).id(adapter.getId(elem)).source(objectTojsonQuietly(elem, adapter.getValueObjectClass()), XContentType.JSON), RequestOptions.DEFAULT);
             idElems.add(adapter.getId(elem));
           }
         }

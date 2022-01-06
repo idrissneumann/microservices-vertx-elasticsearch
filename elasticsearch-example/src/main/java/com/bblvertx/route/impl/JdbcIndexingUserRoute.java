@@ -3,8 +3,8 @@ package com.bblvertx.route.impl;
 import com.bblvertx.indexation.adapter.impl.JdbcUserIndexationDeltaAdapter;
 import com.bblvertx.pojo.vo.UserVO;
 import com.bblvertx.route.AbstractIndexingDeltaRoute;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
+import com.bblvertx.utils.singleton.IRouteContext;
 import io.vertx.ext.web.Router;
 
 /**
@@ -22,7 +22,7 @@ public class JdbcIndexingUserRoute extends AbstractIndexingDeltaRoute<UserVO> {
    * @param router
    * @param ctx
    */
-  public JdbcIndexingUserRoute(String url, String contentType, Router router, RouteContext ctx) {
+  public JdbcIndexingUserRoute(String url, String contentType, Router router, IRouteContext ctx) {
     super(url, contentType, router, ctx);
     this.adapter = new JdbcUserIndexationDeltaAdapter(ctx);
   }

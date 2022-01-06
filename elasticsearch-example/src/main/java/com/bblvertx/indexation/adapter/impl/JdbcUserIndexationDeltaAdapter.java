@@ -12,8 +12,8 @@ import com.bblvertx.indexation.adapter.AbstractIndexingDeltaAdapter;
 import com.bblvertx.persistence.mapper.JdbcUserIdMapper;
 import com.bblvertx.persistence.mapper.JdbcUserMapper;
 import com.bblvertx.pojo.vo.UserVO;
+import com.bblvertx.utils.singleton.IRouteContext;
 import com.bblvertx.utils.singleton.SeDataSource;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ public class JdbcUserIndexationDeltaAdapter extends AbstractIndexingDeltaAdapter
    * 
    * @param ctx
    */
-  public JdbcUserIndexationDeltaAdapter(RouteContext ctx) {
+  public JdbcUserIndexationDeltaAdapter(IRouteContext ctx) {
     super(ctx);
     rowMapper = new JdbcUserMapper();
     rowMapperId = new JdbcUserIdMapper();

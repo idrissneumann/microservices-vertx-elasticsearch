@@ -12,8 +12,8 @@ import com.bblvertx.indexation.adapter.AbstractIndexingDeltaAdapter;
 import com.bblvertx.persistence.mapper.CassandraUserIdMapper;
 import com.bblvertx.persistence.mapper.CassandraUserMapper;
 import com.bblvertx.pojo.vo.UserVO;
+import com.bblvertx.utils.singleton.IRouteContext;
 import com.bblvertx.utils.singleton.SeDataSource;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ public class CassandraUserIndexationDeltaAdapter extends AbstractIndexingDeltaAd
    * 
    * @param ctx
    */
-  public CassandraUserIndexationDeltaAdapter(RouteContext ctx) {
+  public CassandraUserIndexationDeltaAdapter(IRouteContext ctx) {
     super(ctx);
     rowMapper = new CassandraUserMapper();
     rowMapperId = new CassandraUserIdMapper();

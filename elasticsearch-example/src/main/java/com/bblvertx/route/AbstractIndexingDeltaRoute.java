@@ -14,15 +14,19 @@ import com.bblvertx.indexation.adapter.IndexingDeltaAdapter;
 import com.bblvertx.persistence.QueryParam;
 import com.bblvertx.persistence.QueryParamBuilder;
 import com.bblvertx.persistence.RowMapper;
-import com.bblvertx.utils.singleton.impl.RouteContext;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.StringJoiner;
 
+import com.bblvertx.utils.singleton.IRouteContext;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.xcontent.XContentType;
 
 /**
  * Generic impl of delta indexing route.
@@ -50,7 +54,7 @@ public abstract class AbstractIndexingDeltaRoute<T extends Serializable>
   public AbstractIndexingDeltaRoute(String url,
       String contentType,
       Router router,
-      RouteContext ctx) {
+      IRouteContext ctx) {
     super(url, contentType, router, ctx);
   }
 
@@ -92,11 +96,8 @@ public abstract class AbstractIndexingDeltaRoute<T extends Serializable>
 
         if (isNotEmpty(lstResults)) {
           for (Serializable idElem : lstResults) {
-            ctx.getEsClient() //
-                .getClient() //
-                .prepareDelete(adapter.getIndexName(), adapter.getIndexType(),
-                    String.valueOf(idElem)) //
-                .execute().actionGet();
+            ctx.getEsClient().getClient().delete(new DeleteRequest(adapter.getIndexName(), idElem.toString()),
+                    RequestOptions.DEFAULT);
 
             idElems.add(idElem.toString());
           }
@@ -152,13 +153,7 @@ public abstract class AbstractIndexingDeltaRoute<T extends Serializable>
 
         if (isNotEmpty(lstResults)) {
           for (T object : lstResults) {
-            ctx.getEsClient() //
-                .getClient() //
-                .prepareIndex(adapter.getIndexName(), adapter.getIndexType(), adapter.getId(object)) //
-                .setSource(objectTojsonQuietly(object, adapter.getValueObjectClass())) //
-                .execute() //
-                .actionGet();
-
+            ctx.getEsClient().getClient().index(new IndexRequest(adapter.getIndexName()).id(adapter.getId(object)).source(objectTojsonQuietly(object, adapter.getValueObjectClass()), XContentType.JSON), RequestOptions.DEFAULT);
             idElems.add(adapter.getId(object));
           }
         }
