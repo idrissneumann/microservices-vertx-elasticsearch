@@ -25,3 +25,17 @@ docker exec -i bblvertx_postgres psql -U bblvertx bblvertx < src/main/resources/
 ```shell
 docker exec -i bblvertx_cassandra cqlsh < src/main/resources/db/cassandra/0_bblvertx_create_keyspace.cql 
 ```
+
+## Lancer les routes d'indexation
+
+Observer le fichier [`routes.properties`](./src/main/resources/routes.properties)
+
+Lancez toutes les routes `JdbcIndexingUserRoute` et `CassandraIndexingUserRoute`
+
+```shell
+$ docker exec -i bblvertx_postgres psql -U bblvertx bblvertx -c "SELECT index_all()" # ré-initialiser l'index
+$ curl localhost:8071/bblvertx/api/userService/jdbc/index
+<html><body><div>Indexation en cours...</div></body></html>
+$ curl localhost:8071/bblvertx/api/userService/cassandra/index
+<html><body><div>Indexation en cours...</div></body></html>
+```

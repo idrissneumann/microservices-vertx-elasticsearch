@@ -16,6 +16,9 @@ services:
     restart: always
     networks:
       - bblvertx
+    ports:
+      - 9200:9200
+      - 9300:9300
   bblvertx_cassandra:
     image: cassandra:3.11.11
     container_name: bblvertx_cassandra
