@@ -27,7 +27,7 @@
 
 		<!-- database -->
 		<postgresql.version>9.4-1201-jdbc41</postgresql.version>
-		<cassandra-driver-core.version>3.0.0</cassandra-driver-core.version>
+		<cassandra-driver-core.version>3.11.0</cassandra-driver-core.version>
 		<commons-dbcp.version>2.1</commons-dbcp.version>
 
 		<!-- test -->
