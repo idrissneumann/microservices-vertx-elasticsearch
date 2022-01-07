@@ -16,6 +16,19 @@ services:
     restart: always
     networks:
       - bblvertx
+  bblvertx_postgres:
+    image: postgres:9.4
+    container_name: bblvertx_postgres
+    restart: always
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_PASSWORD=bblvertx
+      - POSTGRES_USER=bblvertx
+      - POSTGRES_DB=bblvertx
+    networks:
+      - bblvertx
+    ports:
+      - 5435:5432
   bblvertx_verticle:
     build:
       context: .
