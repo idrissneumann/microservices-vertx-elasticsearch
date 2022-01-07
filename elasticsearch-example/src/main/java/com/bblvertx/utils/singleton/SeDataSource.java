@@ -14,11 +14,6 @@ import java.util.List;
  */
 public interface SeDataSource {
   /**
-   * Initializing connection with the database.
-   */
-  void init();
-
-  /**
    * Fetching the result of a SQL query with a row mapper.
    * 
    * @param query

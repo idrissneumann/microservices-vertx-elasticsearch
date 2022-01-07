@@ -39,7 +39,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -61,12 +60,7 @@ public class CassandraDataSourceImpl implements ICassandraDataSource {
     @Inject
     private IPropertyReader prop;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @PostConstruct
-    public void init() throws TechnicalException {
+    private CassandraDataSourceImpl(IPropertyReader prop) {
         try {
             Integer port = prop.getInt(APP_CONFIG_FILE, CASS_PORT);
             String host = prop.get(APP_CONFIG_FILE, CASS_HOST);
@@ -100,6 +94,10 @@ public class CassandraDataSourceImpl implements ICassandraDataSource {
         } catch (Exception e) {
             LOGGER.error("Unable to connect to cassandra database : {}", e.getMessage());
         }
+    }
+
+    public static CassandraDataSourceImpl newInstance(IPropertyReader prop) {
+        return new CassandraDataSourceImpl(prop);
     }
 
     /**

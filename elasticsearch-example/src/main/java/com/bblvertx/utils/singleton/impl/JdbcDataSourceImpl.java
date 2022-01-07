@@ -19,6 +19,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -31,7 +32,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
@@ -52,12 +52,10 @@ public class JdbcDataSourceImpl implements IJdbcDataSource {
 
     private BasicDataSource dataSource;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @PostConstruct
-    public void init() {
+    private JdbcDataSourceImpl(IPropertyReader prop) {
+        this.prop = prop;
+        this.dataSource = new BasicDataSource();
+
         try {
             dataSource = new BasicDataSource();
             dataSource.setDriverClassName(prop.get(APP_CONFIG_FILE, DB_KEY_DRIVER));
@@ -70,9 +68,13 @@ public class JdbcDataSourceImpl implements IJdbcDataSource {
             dataSource.setPoolPreparedStatements(true);
 
             testConnection();
-        } catch (Exception e) {
-            LOGGER.error("Unable to connect to JDBC compliant database : {}", e.getMessage());
+        } catch (IOException e) {
+            throw new TechnicalException(e.getMessage());
         }
+    }
+
+    public static JdbcDataSourceImpl newInstance(IPropertyReader prop) {
+        return new JdbcDataSourceImpl(prop);
     }
 
     /**

@@ -37,8 +37,8 @@ public class SeBinder extends AbstractModule {
     bind(Vertx.class).toInstance(vertx);
     IPropertyReader reader = PropertyReaderImpl.newInstance();
     bind(IPropertyReader.class).toInstance(reader);
-    bind(IJdbcDataSource.class).to(JdbcDataSourceImpl.class).in(Singleton.class);
-    bind(ICassandraDataSource.class).to(CassandraDataSourceImpl.class).in(Singleton.class);
+    bind(IJdbcDataSource.class).toInstance(JdbcDataSourceImpl.newInstance(reader));
+    bind(ICassandraDataSource.class).toInstance(CassandraDataSourceImpl.newInstance(reader));
     bind(IESClient.class).to(ESClientImpl.class).in(Singleton.class);
     bind(IRouteContext.class).to(RouteContextImpl.class).in(Singleton.class);
   }
