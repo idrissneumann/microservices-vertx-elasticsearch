@@ -16,3 +16,7 @@ Formation d'introduction donnée en 2016 et en 2022 sur les microservices Elasti
 ### Slides de la formation
 
 * [Slides](./slides-microservices-vertx-elasticsearch.pdf)
+
+### Démo / workshop
+
+Suivre ce [README](./elasticsearch-example/README.md)
