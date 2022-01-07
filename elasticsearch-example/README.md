@@ -217,3 +217,54 @@ $ curl localhost:9200/user/_search?size=100|jq .
 Faites les mêmes opérations et vérifications mais avec la route `CassandraIndexingUserRoute`.
 
 Vous devriez retrouver plus d'utilisateurs dans l'index.
+
+
+## Tester la route de recherche multi-critères
+
+Tester la route `SearchUserRoute`:
+
+```shell
+$ curl "localhost:8071/bblvertx/api/userService/search?startIndex=0&maxResults=2"|jq .
+{
+  "startIndex": 0,
+  "maxResults": 2,
+  "totalResults": 10,
+  "results": [
+    {
+      "name": "Dujardin",
+      "firstname": "Jean",
+      "email": "jean.dujardin@domain.com",
+      "id": "1",
+      "skill": "Cinema",
+      "dateConnect": 1641513600000,
+      "dateUpdate": 1641513600000,
+      "rsSearch": 1,
+      "randomId": "c9a7493c-5ff9-496b-af93-2eadd66379a9"
+    },
+    {
+      "name": "Dupont",
+      "firstname": "Michel",
+      "email": "michel.dupont@domain.com",
+      "id": "2",
+      "skill": null,
+      "dateConnect": 1641513600000,
+      "dateUpdate": 1641513600000,
+      "rsSearch": 1,
+      "randomId": "0cdc6be4-4f57-401e-a144-1cd2003cf7ca"
+    }
+  ]
+}
+```
+
+Essayez d'autres combinaisons de critères en allant voir le code de `SearchUserRoute`.
+
+Essayez ensuite d'invoquer la route `AutocompleteSkillRoute` utilisée pour faire de l'auto-complete sur des compétences.
+
+## A vous
+
+Ajoutez une nouvelle ressource comme des offres d'emploi par exemple :
+
+* Tables dans PostgreSQL et Cassandra
+* Routes d'indexation asynchrones pour PostgreSQL et Cassandra
+* Route de recherche multicritère dans Elasticsearch
+* Route d'auto-complete sur des spécialitées recherchées
