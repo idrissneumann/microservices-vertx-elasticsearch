@@ -24,7 +24,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<!-- Vert.x -->
-		<vertx.version>3.5.4</vertx.version>
+		<vertx.version>4.2.3</vertx.version>
 	</properties>
 
 	<dependencies>
@@ -58,7 +58,7 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>io.vertx.core.Starter</Main-Class>
+										<Main-Class>io.vertx.core.Launcher</Main-Class>
 										<Main-Verticle>java-hk2:com.bblvertx.HelloServer</Main-Verticle>
 									</manifestEntries>
 								</transformer>

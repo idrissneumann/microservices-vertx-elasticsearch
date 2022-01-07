@@ -46,7 +46,7 @@
 		<tika.version>1.22</tika.version>
 
 		<!-- Vert.x -->
-		<vertx.version>4.2.2</vertx.version>
+		<vertx.version>4.2.3</vertx.version>
 		<guice.version>5.0.1</guice.version>
 
 		<!-- Elastic Search -->
