@@ -17,7 +17,7 @@ WORKDIR ${BASE_DIR}
 COPY . ${BASE_DIR}
 
 RUN mvn clean install -Dmaven.test.skip && \
-    mv /bblvertx/bblvertx-${IMAGE_SERVICE}/target/bblvertx-${MVN_ARTIFACT_VERSION}-fat.jar /bblvertx-fat.jar
+    mv /bblvertx/elasticsearch-example/target/bblvertx-${MVN_ARTIFACT_VERSION}-fat.jar /bblvertx-fat.jar
 
 ###################################################
 # Stage vertx_service: exposing a vertx based app #
