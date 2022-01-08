@@ -23,7 +23,13 @@ import com.bblvertx.route.AbstractSearchIndexRoute;
 import com.bblvertx.utils.singleton.IRouteContext;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.ext.web.Router;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.search.SearchRequest;
@@ -31,17 +37,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import io.vertx.core.http.HttpServerRequest;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.ext.web.Router;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 
 /**
  * Route to search user by criterias.
@@ -88,7 +84,6 @@ public class SearchUserRoute extends AbstractSearchIndexRoute {
         String.format(MSG_BAD_REQUEST_MUST_BE_CALENDAR, "dateConnect"));
 
     BoolQueryBuilder qb = boolQuery();
-    qb.minimumShouldMatch(1);
 
     if (isNotEmpty(nom)) {
       qb.must(match("name", nom));
@@ -114,13 +109,19 @@ public class SearchUserRoute extends AbstractSearchIndexRoute {
       qb.must(match("id", id));
     }
 
+    boolean minShouldCriteria = false;
     if (isNotEmpty(searchCriteres)) {
       for (String c : searchCriteres) {
+        minShouldCriteria = true;
         qb.should(regexpQuery("name", c.toLowerCase() + ".*"));
         qb.should(regexpQuery("firstname", c.toLowerCase() + ".*"));
         qb.should(regexpQuery("email", c.toLowerCase() + ".*"));
         qb.should(matchQuery("id", c.toLowerCase()));
       }
+    }
+
+    if(minShouldCriteria) {
+      qb.minimumShouldMatch(1);
     }
 
     SearchResponse r = null;
