@@ -33,3 +33,10 @@ La session a été donnée en workshop sur Tunis en 2022 et les vidéos lives so
 ### Démo / workshop
 
 Suivre ce [README](./elasticsearch-example/README.md)
+
+### Git repositories
+
+* Repo principal : https://gitlab.comwork.io/comwork_training/microservices-vertx-elasticsearch
+* Miroir github : https://github.com/idrissneumann/microservices-vertx-elasticsearch.git
+* Miroir gitlab : https://gitlab.com/ineumann/microservices-vertx-elasticsearch.git
+
