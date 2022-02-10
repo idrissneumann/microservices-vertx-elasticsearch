@@ -39,4 +39,5 @@ Suivre ce [README](./elasticsearch-example/README.md)
 * Repo principal : https://gitlab.comwork.io/comwork_training/microservices-vertx-elasticsearch
 * Miroir github : https://github.com/idrissneumann/microservices-vertx-elasticsearch.git
 * Miroir gitlab : https://gitlab.com/ineumann/microservices-vertx-elasticsearch.git
+* Miroir bitbucket : https://bitbucket.org/idrissneumann/microservices-vertx-elasticsearch.git
 
